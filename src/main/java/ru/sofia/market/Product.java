@@ -1,3 +1,5 @@
+package ru.sofia.market;
+
 /**
  * Класс продукт, содержит имя и цену
  */
@@ -16,7 +18,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" +
+        return "ru.sofia.market.Product{" +
                 "productName='" + productName + '\'' +
                 ", price=" + price +
                 '}';

@@ -1,3 +1,5 @@
+package ru.sofia.market;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +43,7 @@ public class Main {
             currencyConverter = CurrencyBase.get(date);
         } else {
             Reader file = new Reader();
-            Double cur[] = file.getCurr(date.toString()+".txt", "src/data/");
+            Double cur[] = file.getCurr(date.toString()+".txt", "src/main/java/data/");
             currencyConverter = new CurrencyConverter(cur[0], cur[1], cur[2]);
             CurrencyBase.save(date,currencyConverter);
         }

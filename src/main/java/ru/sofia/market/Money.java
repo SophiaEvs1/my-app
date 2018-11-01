@@ -1,3 +1,5 @@
+package ru.sofia.market;
+
 /**
  * Класс деньги, содержит значение и валюту
  */
@@ -24,7 +26,7 @@ public  class Money {
 
     @Override
     public String toString() {
-        return "Money{" +
+        return "ru.sofia.market.Money{" +
                 "" + value +
                 " " + moneyCurrency +
                 '}';

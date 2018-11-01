@@ -1,3 +1,5 @@
+package ru.sofia.market;
+
 import java.util.HashMap;
 import java.util.Map;
 

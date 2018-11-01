@@ -1,3 +1,5 @@
+package ru.sofia.market;
+
 public class CurrencyConverter {
     private final double unitUSD;
     private final double unitRUB;
