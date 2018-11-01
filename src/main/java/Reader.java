@@ -21,7 +21,8 @@ public class Reader {
                 k[1] = num.nextDouble();
                 k[2] = num.nextDouble();
             } else {
-                URL url = new URL("https://forex.1forge.com/1.0.3/quotes?pairs=USDRUB,EURUSD");
+                URL url = new URL("https://forex.1forge.com/1.0.3/quotes?pairs=USDRUB,EURUSD&api_key=2DEw6Q2jlPSy250zGBQp1rIJ" +
+                        "hC3ZlHXx");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 if (connection.getResponseCode() == 200) {
@@ -33,9 +34,9 @@ public class Reader {
                     }
                     System.out.println(stringBuilder);
                     JSONParser jsonParser = new JSONParser();
-                    JSONObject jsonObject = (JSONObject) jsonParser.parse(stringBuilder.toString());
-                    System.out.println(jsonObject);
-                    JSONArray jsonArray = (JSONArray) jsonObject.get("");
+                    JSONArray jsonArray = (JSONArray)  jsonParser.parse(stringBuilder.toString());
+                    System.out.println(jsonArray);
+
                     JSONObject USDRUB = (JSONObject) jsonArray.get(0);
                     JSONObject EURUSD = (JSONObject) jsonArray.get(1);
                     Double usdrub = (Double) USDRUB.get("price");
@@ -43,8 +44,12 @@ public class Reader {
                     Double erusd = (Double) EURUSD.get("price");
                     System.out.println(erusd);
                     FileWriter fileWriter = new FileWriter(path + filename);
-                    fileWriter.write("1 " + usdrub + " " + erusd);
+                    fileWriter.write("1 " + usdrub.toString().replace(".", ",") + " " + erusd.toString().replace(".", ","));
                     fileWriter.close();
+
+                    k[0] = 1.;
+                    k[1] = usdrub;
+                    k[2] = erusd;
                 }
             }
 
