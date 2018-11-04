@@ -1,20 +1,25 @@
 package ru.sofia.market;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.Scanner;
 
 public class Reader {
-    public Double[] getCurr(String filename, String path) {
-        Double k[] = new Double[3];
+    public CurrencyConverter getCurr(String filename, String path) {
         try {
+            Double k[] = new Double[3];
             File file = new File(path, filename);
+
+            System.out.println("File path: " + file.getAbsolutePath());
             if (file.exists()) {
                 Scanner scanner = new Scanner(file);
                 String nextLine = scanner.nextLine();
@@ -22,46 +27,63 @@ public class Reader {
                 k[0] = num.nextDouble();
                 k[1] = num.nextDouble();
                 k[2] = num.nextDouble();
-            } else {
-                URL url = new URL("https://forex.1forge.com/1.0.3/quotes?pairs=USDRUB,EURUSD&api_key=2DEw6Q2jlPSy250zGBQp1rIJ" +
-                        "hC3ZlHXx");
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                if (connection.getResponseCode() == 200) {
-                    BufferedReader inputStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                    String s;
-                    StringBuilder stringBuilder = new StringBuilder();
-                    while ((s = inputStream.readLine()) != null) {
-                        stringBuilder.append(s);
+                return new CurrencyConverter(k[0], k[1], k[2]);
+            }
+        } catch (Throwable e) {
+        }
+        return null;
+    }
+
+
+    public CurrencyConverter getCurrencies_from_site(String filename, String path, LocalDate data) throws Throwable {
+        Double k[] = new Double[3];
+        File file = new File(path, filename);
+        URL url = new URL("http://www.cbr.ru/scripts/XML_daily_eng.asp?date_req=" + String.format("%02d", data.getDayOfMonth()) + "/" + data.getMonthValue() + "/" + data.getYear());
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        if (connection.getResponseCode() == 200) {
+            BufferedReader inputStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String s;
+            StringBuilder stringBuilder = new StringBuilder();
+            while ((s = inputStream.readLine()) != null) {
+                stringBuilder.append(s);
+            }
+            System.out.println(stringBuilder);
+
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+
+            ByteArrayInputStream input = new ByteArrayInputStream(
+                    stringBuilder.toString().getBytes("UTF-8"));
+            Document doc = builder.parse(input);
+            doc.getDocumentElement().normalize();
+
+
+            NodeList nList = doc.getElementsByTagName("Valute");
+
+            for (int i = 0; i < nList.getLength(); i++) {
+                Node node = nList.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) node;
+
+                    String id = element.getAttribute("ID");
+                    if (id.equals("R01239")) {
+                        k[1] = Double.parseDouble(element.getElementsByTagName("Value").item(0).getTextContent()
+                                .replace(",", "."));
                     }
-                    System.out.println(stringBuilder);
-                    JSONParser jsonParser = new JSONParser();
-                    JSONArray jsonArray = (JSONArray)  jsonParser.parse(stringBuilder.toString());
-                    System.out.println(jsonArray);
-
-                    JSONObject USDRUB = (JSONObject) jsonArray.get(0);
-                    JSONObject EURUSD = (JSONObject) jsonArray.get(1);
-                    Double usdrub = (Double) USDRUB.get("price");
-                    System.out.println(usdrub);
-                    Double erusd = (Double) EURUSD.get("price");
-                    System.out.println(erusd);
-                    FileWriter fileWriter = new FileWriter(path + filename);
-                    fileWriter.write("1 " + usdrub.toString().replace(".", ",") + " " + erusd.toString().replace(".", ","));
-                    fileWriter.close();
-
-                    k[0] = 1.;
-                    k[1] = usdrub;
-                    k[2] = erusd;
+                    if (id.equals("R01235")) {
+                        k[2] = Double.parseDouble(element.getElementsByTagName("Value").item(0).getTextContent()
+                                .replace(",", "."));
+                    }
                 }
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
+            k[0] = 1.;
+            FileWriter fileWriter = new FileWriter(path + filename);
+            fileWriter.write("1 " + k[1].toString().replace(".", ",") + " " + k[2].toString().replace(".", ","));
+            fileWriter.close();
         }
-
-
-        return k;
+        return new CurrencyConverter(k[0], k[1], k[2]);
     }
+
 }
+

@@ -1,5 +1,6 @@
 package ru.sofia.market;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ public class CurrencyBase {
         return map.get(date);
     }
 
-    public static boolean contains(LocalDate date){
+    public static boolean contains(LocalDate date) {
         return map.containsKey(date);
     }
 }

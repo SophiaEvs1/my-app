@@ -1,10 +1,6 @@
-Product.class
-Main.class
-CurrencyConverter.class
-CurrentDay.class
-LocalDate.class
-Currency.class
-CurrencyConverter$1.class
-Money.class
-CurrencyBase.class
-Reader.class
+ru\sofia\market\Currency.class
+ru\sofia\market\CurrencyConverter$1.class
+ru\sofia\market\Product.class
+ru\sofia\market\Money.class
+ru\sofia\market\CurrentDay.class
+ru\sofia\market\CurrencyConverter.class
