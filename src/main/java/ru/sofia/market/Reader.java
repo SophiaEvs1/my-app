@@ -60,7 +60,6 @@ public class Reader {
 
 
             NodeList nList = doc.getElementsByTagName("Valute");
-
             for (int i = 0; i < nList.getLength(); i++) {
                 Node node = nList.item(i);
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
