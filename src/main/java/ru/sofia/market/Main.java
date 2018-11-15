@@ -6,13 +6,11 @@ import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) throws Throwable {
+    public static void _main(String[] args) throws Throwable {
         //составляем список продуктов
         List<Product> productList = new ArrayList<>();
 
-
         LocalDate date = LocalDate.of(2018, 10, 25);
-
 
         Money newZeland = new Money(400000, Currency.USD);
         productList.add(new Product("Велингтон", newZeland));

@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class CurrencyService {
-    public static double calculateCosts(List<Product> productList, Currency costsCurrency, LocalDate date) throws Throwable {
+    public static CurrencyConverter getConverter(LocalDate date) throws Throwable {
         CurrencyConverter currencyConverter;
         if (CurrencyBase.contains(date)) {
             currencyConverter = CurrencyBase.get(date);
@@ -15,6 +15,12 @@ public class CurrencyService {
                 currencyConverter = file.getCurrencies_from_site(date.toString() + ".txt", "src/main/resources/data/", date);
             CurrencyBase.save(date, currencyConverter);
         }
+
+        return currencyConverter;
+    }
+
+    public static double calculateCosts(List<Product> productList, Currency costsCurrency, LocalDate date) throws Throwable {
+        CurrencyConverter currencyConverter = CurrencyService.getConverter(date);
         double summ = 0;
         for (Product i : productList) {
             System.out.println("product: " + i);

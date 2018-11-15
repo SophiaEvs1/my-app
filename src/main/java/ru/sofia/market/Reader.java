@@ -67,11 +67,11 @@ public class Reader {
                     Element element = (Element) node;
 
                     String id = element.getAttribute("ID");
-                    if (id.equals("R01239")) {
+                    if (id.equals("R01235")) {
                         k[1] = Double.parseDouble(element.getElementsByTagName("Value").item(0).getTextContent()
                                 .replace(",", "."));
                     }
-                    if (id.equals("R01235")) {
+                    if (id.equals("R01239")) {
                         k[2] = Double.parseDouble(element.getElementsByTagName("Value").item(0).getTextContent()
                                 .replace(",", "."));
                     }
