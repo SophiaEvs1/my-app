@@ -5,6 +5,11 @@ package ru.sofia.market;
  */
 public class Money {
     private double value;
+
+    public void setMoneyCurrency(Currency moneyCurrency) {
+        this.moneyCurrency = moneyCurrency;
+    }
+
     private Currency moneyCurrency;
     public Money(double value, Currency moneyCurrency) {
         this.value = value;
@@ -30,4 +35,6 @@ public class Money {
                 " " + moneyCurrency +
                 '}';
     }
+
+
 }

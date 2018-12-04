@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+<head>
+  <title>Глобальный рынок</title>
+</head>
+<body>
+<h3 layout:fragment="header">Введите произвольную дату</h3>
+<div layout:fragment="content"
+     class="container">
+  <form id="messageForm"
+        th:object="${message}"
+        action="#"
+        method="get">
+    <div>
+      <input type="date"
+             placeholder="dd.mm.yyyy"
+             th:field="*{date}"
+             th:class="${#fields.hasErrors('date')} ? 'field-error'"/>
+      <button type="submit" class="btn btn-info" style="margin-bottom: 9px">Показать курсы валют</button>
+    </div>
+    <br />
+    <div th:if="${message.getValue()}">
+      <div th:text="'Курс валют за ' + ${message.getDate()}" class="alert alert-success"> </div>
+      <table class="table">
+        <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">First</th>
+          <th scope="col">Second</th>
+          <th scope="col">Сorrelation</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="value,iter : ${message.getValue()}">
+          <th scope="row" th:text="${iter.index+1}"></th>
+          <td th:text="${value.getFirstCurrency()}"></td>
+          <td th:text="${value.getSecondCurrency()}"></td>
+          <td th:text="${value.getCorrelation()}"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </form>
+  
+
+
+</div>
+</body>
+</html>
